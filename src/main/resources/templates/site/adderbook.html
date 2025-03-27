@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extra/spring-security">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" type="shortcut icon" th:href="@{/img/favicon.ico}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/css/global.css}" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+	<title>邮件系统 - 通讯录</title>
+</head>
+<body>
+<div class="nk-container" >
+	<!-- 头部 -->
+	<header class="bg-dark sticky-top" th:replace="index::header"></header>
+
+	<!-- 内容 -->
+	<div class="main">
+		<!-- 邮件详情 -->
+		<div class="container">
+			<div class="modal fade" id="hintModal" tabindex="-1" role="dialog" aria-labelledby="hintModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="hintModalLabel">提示</h5>
+						</div>
+						<div class="modal-body" id="hintBody"></div>
+					</div>
+				</div>
+			</div>
+			<!-- 搜索 -->
+			<form class="form-inline my-2 my-lg-0" method="get" th:action="@{/user/userlist}" >
+				姓名：<input class="form-control mr-sm-2" type="text" name="userName" aria-label="Search" th:value="${userName}" />
+				部门：<input class="form-control mr-sm-2" type="text" name="userDept" aria-label="Search" th:value="${userDept}" />
+				<button class="btn btn-outline-light my-2 my-sm-0 serach-btn" type="submit"><i class="bi bi-search"></i> 搜索</button>
+			</form>
+			<!-- 邮件列表 -->
+			<ul class="list-unstyled" style="margin-top: 10px;">
+				<li class="media pb-3 pt-3 mb-3 border-bottom" th:each="uu:${userList}">
+					<a th:href="@{|/user/profile/${uu.user.id}|}">
+						<img th:src="${uu.user.headerUrl}" class="mr-4 rounded-circle" alt="用户头像" style="width:50px;height:50px;">
+					</a>
+					<div class="media-body">
+						<h6 class="mt-0 mb-3">
+							<a style="font-weight: 500"  th:utext="${uu.user.username}"></a> <b style="margin-left: 20px;" th:utext="${uu.user.email}"></b>
+						</h6>
+						<div class="text-muted font-size-12">
+							人员角色：
+
+							<u th:if="${uu.user.type == 1}" class="mr-3" th:utext="普通员工"></u>
+							<u th:if="${uu.user.type == 2}" class="mr-3" th:utext="部门主管"></u>
+							<u th:if="${uu.user.type == 3}" class="mr-3" th:utext="系统管理员"></u>
+
+
+						</div>
+						<div class="text-muted font-size-12">
+							部门：<u class="mr-3" th:utext="${uu.user.userDept}"></u>
+						</div>
+					</div>
+				</li>
+			</ul>
+
+			<!--分页 -->
+			<nav class="mt-5" th:if = "${page.rows>0}" th:fragment="pagination">
+				<ul class="pagination justify-content-center">
+					<li class="page-item">
+						<a class="page-link" th:href="@{${page.path}(current=1)}">首页</a>
+					</li>
+					<li th:class="|page-item ${page.current==1?'disabled':''}|">
+						<a class="page-link" th:href="@{${page.path}(current=${page.current-1})}">上一页</a>
+					</li>
+					<!--numbers.sequence 生成一个 page.from 到 page.to 的连续整数数组-->
+					<li th:each="i:${#numbers.sequence(page.from,page.to)}" th:class="|page-item ${i==page.current? 'active' : ''}|" >
+						<a class="page-link" th:href="@{${page.path}(current=${i})}" th:text="${i}"></a>
+					</li>
+					<li th:class="|page-item ${page.current==page.total ? 'disabled':''}|">
+						<a class="page-link" th:href="@{${page.path}(current=${page.current+1})}">下一页</a>
+					</li>
+					<li class="page-item">
+						<a class="page-link" th:href="@{${page.path}(current=${page.total})}">末页</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+
+		<!-- 尾部 -->
+		<!--		<footer class="bg-dark" th:replace="index::footer"></footer>-->
+
+	</div>
+	<script th:src="@{/js/jquery-3.1.0.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/js/global.js}"></script>
+	<script th:src="@{/js/discuss.js}"></script>
+
+	<script th:src="@{/editor-md/lib/marked.min.js}"></script>
+	<script th:src="@{/editor-md/lib/prettify.min.js}"></script>
+	<script th:src="@{/editor-md/lib/raphael.min.js}"></script>
+	<script th:src="@{/editor-md/lib/underscore.min.js}"></script>
+	<script th:src="@{/editor-md/lib/sequence-diagram.min.js}"></script>
+	<script th:src="@{/editor-md/lib/flowchart.min.js}"></script>
+	<script th:src="@{/editor-md/lib/jquery.flowchart.min.js}"></script>
+	<script th:src="@{/editor-md/editormd.min.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pan.email.dao.PostFileMapper">
+    <resultMap id="BaseResultMap" type="com.pan.email.entity.PostFile" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+        <result column="file_url" property="fileUrl" jdbcType="VARCHAR" />
+        <result column="file_type" property="fileType" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+        <result column="post_id" property="postId" jdbcType="VARCHAR" />
+    </resultMap>
+<!--    按照邮件查询附件-->
+    <select id="selectByPostId" resultMap="BaseResultMap">
+        select * from post_file where post_id=#{postId}
+    </select>
+<!--    添加附件方法-->
+    <insert id="insert" parameterType="com.pan.email.entity.PostFile" >
+        insert into post_file (id, file_name, file_url,file_type, post_id,create_time)
+        values (#{postFile.id,jdbcType=INTEGER}, #{postFile.fileName}, #{postFile.fileUrl},
+        #{postFile.fileType}, #{postFile.postId}, #{postFile.createTime,jdbcType=TIMESTAMP})
+    </insert>
+
+<!--    删除附件方法 在回撤邮件的时候-->
+    <delete id="deleteByPostId">
+        delete from post_file where post_id=#{postId}
+    </delete>
+</mapper>
